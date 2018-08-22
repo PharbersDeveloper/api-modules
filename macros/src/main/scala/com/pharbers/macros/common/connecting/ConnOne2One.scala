@@ -1,8 +1,8 @@
 package com.pharbers.macros.common.connecting
 
-import scala.annotation.{StaticAnnotation, compileTimeOnly}
 import scala.reflect.macros.whitebox
 import scala.language.experimental.macros
+import scala.annotation.{StaticAnnotation, compileTimeOnly}
 
 @compileTimeOnly("enable macro paradis to expand macro annotations")
 class ConnOne2One(para_name : String, class_name : String) extends StaticAnnotation {
@@ -20,7 +20,6 @@ object ConnOne2One {
             case (param : TypeDef) :: (rest @ (_ :: _)) => ("type", param, rest)
             case _ => ("", EmptyTree, inputs)
         }
-//        println((s, annottee, expandees))
         val outputs = expandees
 
         c.Expr[Any](Block(outputs, Literal(Constant(()))))

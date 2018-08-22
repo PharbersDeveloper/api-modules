@@ -1,7 +1,7 @@
 package com.pharbers
 
 import com.pharbers.jsonapi.model._
-import com.pharbers.jsonapi.model.RootObject.{ResourceObject, ResourceObjects}
+import com.pharbers.jsonapi.model.RootObject.ResourceObject
 
 package object jsonapi {
 
@@ -14,7 +14,6 @@ package object jsonapi {
     }
 
     trait JsonapiReourceObjectWriter[A] {
-//        def toJsonapi(a : A) : ResourceObject
         def toJsonapi(a : A) : Attributes
     }
 

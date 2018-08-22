@@ -1,30 +1,31 @@
 package com.pharbers.macros.common.connecting
 
+
 import scala.reflect.macros.whitebox
 import scala.language.experimental.macros
 
 import scala.annotation.{StaticAnnotation, compileTimeOnly}
 
 @compileTimeOnly("enable macro paradis to expand macro annotations")
-class ConnectionsMacro extends StaticAnnotation {
-    def macroTransform(annottees: Any*): Any = macro ConnectionsMacro.impl
+class ConnectionsMacroBK extends StaticAnnotation {
+    def macroTransform(annottees : Any*) : Any = macro ConnectionsMacro.impl
 }
 
-object ConnectionsMacro {
-    def impl(c: whitebox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
+object ConnectionsMacroBK {
+    def impl(c : whitebox.Context)(annottees : c.Expr[Any]*) : c.Expr[Any] = {
         import c.universe._
         import c.universe.Flag._
 
-        val inputs = annottees.map(_.tree).toList
+        val inputs = annottees.map (_.tree).toList
         assert(inputs.length == 1, message = "only can handle one class def")
 
-        val (_, annottee, _) = inputs match {
-            case (param: ValDef) :: (rest@_ :: _) => ("val", param, rest)
-            case (param: TypeDef) :: (rest@_ :: _) => ("type", param, rest)
+        val (s, annottee, expandees) = inputs match {
+            case (param : ValDef) :: (rest @ (_ :: _)) => ("val", param, rest)
+            case (param : TypeDef) :: (rest @ (_ :: _)) => ("type", param, rest)
             case _ => ("", EmptyTree, inputs)
         }
 
-        assert(annottee == EmptyTree, message = "please note a class")
+        assert(annottee == EmptyTree, message = "please")
 
         val tmp = inputs.head
 
@@ -33,8 +34,7 @@ object ConnectionsMacro {
             var paradef = List[(c.universe.TermName, c.universe.Tree)]()
             var one2onedef = List[(String, String)]()
             var one2manydef = List[(String, String)]()
-            var _tmn: c.universe.TypeName = null
-
+            var _tmn : c.universe.TypeName = null
             override def traverse(tree: Tree): Unit = tree match {
                 case ValDef(mods, tnm, tpy, rhs) =>
                     valdef = if ((mods.flags.hashCode & Flag.PARAM.hashCode) == 0) (tnm, tpy) :: valdef else valdef
@@ -57,7 +57,7 @@ object ConnectionsMacro {
                 annots.map { iter =>
 //                    println(showRaw(iter))
                     iter match {
-                        case _@Apply(Select(New(Ident(tpm)), _), List(Literal(Constant(para)), Literal(Constant(cons)))) =>
+                        case _ @ Apply(Select(New(Ident(tpm)), _), List(Literal(Constant(para)), Literal(Constant(cons)))) =>
                             tpm toString match {
                                 case "ConnOne2One" => one2onedef = (para.toString, cons.toString) :: one2onedef
                                 case "ConnOne2Many" => one2manydef = (para.toString, cons.toString) :: one2manydef
@@ -94,9 +94,7 @@ object ConnectionsMacro {
         }.reverse
 
         val queyparadefFunc = paradefFunc.map { iter =>
-            iter match {
-                case ValDef(_, tpn, _, _) => Ident(tpn)
-            }
+            iter match { case ValDef(_, tpn, _, _) => Ident(tpn) }
         }
 
         val addConnectFunc = t.one2onedef.map { iter =>
@@ -174,7 +172,7 @@ object ConnectionsMacro {
                                 Apply(Select(New(Ident(t._tmn)), termNames.CONSTRUCTOR),
                                     queyparadefFunc
                                 )) :: Nil
-                                    ) ::: applyAddConnectFunc ::: applyAddConnectManyFunc
+                                    )  ::: applyAddConnectFunc ::: applyAddConnectManyFunc
                             , Ident(TermName("t"))
                         )
                     )) ::: implicitExpendingFun

@@ -1,8 +1,8 @@
 package com.pharbers.macros.common.connecting
 
-import scala.annotation.{StaticAnnotation, compileTimeOnly}
 import scala.reflect.macros.whitebox
 import scala.language.experimental.macros
+import scala.annotation.{StaticAnnotation, compileTimeOnly}
 
 @compileTimeOnly("enable macro paradis to expand macro annotations")
 class ConnOne2Many(para_name : String, class_name : String) extends StaticAnnotation {

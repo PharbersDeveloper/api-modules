@@ -27,7 +27,6 @@ object Resultable {
             import com.pharbers.jsonapi.model.JsonApiObject.{JsArrayValue, JsObjectValue, NullValue, NumberValue, StringValue}
             import com.pharbers.jsonapi.model.{Attribute, Attributes, Links, RootObject}
             import com.pharbers.jsonapi.model.RootObject.{ResourceObject, ResourceObjects}
-            import com.pharbers.macros.common.TestAnnotation
             import com.pharbers.macros.common.resulting.Resultable
             import com.pharbers.model.detail._
 

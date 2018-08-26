@@ -7,7 +7,7 @@ import com.pharbers.macros.api.JsonapiConvert
 object JsonapiMacro {
     implicit def jsonapiMacroMaterialize[T] : JsonapiConvert[T] = macro impl[T]
 
-    def impl[T](c: whitebox.Context)(ttag: c.WeakTypeTag[T]) : c.Expr[JsonapiConvert[T]] = {
+    def impl[T](c: whitebox.Context)(ttag: c.WeakTypeTag[T]): c.Expr[JsonapiConvert[T]] = {
         import c.universe._
 
         val t_name = ttag.tpe match { case TypeRef(_, str, _) => str }
@@ -54,12 +54,11 @@ object JsonapiMacro {
 
         val q"..$clsdef" =
             q"""
-                import com.pharbers.model._
                 import com.pharbers.macros.api.JsonapiConvert
                 class ${fresh_class_name} extends JsonapiConvert[${TypeName(weak_type_name)}] {
                    def fromJsonapi(jsonapi: RootObject): ${TypeName(weak_type_name)} = {
                         println("aaaaaaaaabbbbbbbb")
-                        new user()
+                        profile("test")
                    }
                    def toJsonapi(obj: ${TypeName(weak_type_name)}): RootObject = {
                         println("toJsonapi")

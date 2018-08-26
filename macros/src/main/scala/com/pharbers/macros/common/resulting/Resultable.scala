@@ -90,7 +90,7 @@ object Resultable {
                                 id = Some(p.id.toString),
                                 attributes = Some(
                                     attrs.toList
-                                ), links = Some(List(Links.Self("http://test.link/person/42", None))))))
+                                ), links = Some(List(Links.Self("http://com.pharbers.test.link/person/42", None))))))
                 }
 
                     override def fromJsonapi(rootObject: RootObject): ${TypeName(weak_type_name)} = ???

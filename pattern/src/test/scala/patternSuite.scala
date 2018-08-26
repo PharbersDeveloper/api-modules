@@ -44,7 +44,7 @@
 //        }
 //    }
 //
-//    test("pharbers pattern test") {
+//    com.pharbers.test("pharbers pattern com.pharbers.test") {
 //        val p = Person(42, "Alfred")//.asJson
 //        println(p.getClass)
 //        println(p)

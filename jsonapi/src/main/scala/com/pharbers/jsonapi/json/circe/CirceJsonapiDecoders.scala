@@ -92,6 +92,7 @@ trait CirceJsonapiDecoders {
             }.toMap
         }
         (href, Some(meta))
+      case _ => ???
     }
   }
 

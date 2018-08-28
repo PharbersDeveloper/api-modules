@@ -1,8 +1,12 @@
 package com.pharbers.model
 
 import com.pharbers.macros.api.commonEntity
-import com.pharbers.macros.common.connecting.One2OneConn
+import com.pharbers.macros.common.connecting.{One2ManyConn, One2OneConn, ToStringMacro}
 
 @One2OneConn[company]("company")
-case class profile(name: String = "",
-                   age: Int = 0) extends commonEntity
+@One2ManyConn[Order]("orders")
+@ToStringMacro
+case class profile() extends commonEntity {
+    var name: String = ""
+    var age: Int = 0
+}

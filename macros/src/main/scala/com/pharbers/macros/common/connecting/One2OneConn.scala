@@ -2,11 +2,8 @@ package com.pharbers.macros.common.connecting
 
 import scala.reflect.macros.whitebox
 import com.pharbers.util.log.phLogTrait
-import com.sun.source.util.Trees
-
 import scala.language.experimental.macros
 import scala.annotation.{StaticAnnotation, compileTimeOnly}
-import scala.reflect.api
 
 @compileTimeOnly("enable macro paradis to expand macro annotations")
 class One2OneConn[C](param_name: String) extends StaticAnnotation {
@@ -36,7 +33,7 @@ object One2OneConn extends phLogTrait {
 //                phLog("conn_name = " + conn_name)
 //                phLog("conn_type = " + conn_type)
 
-                val fields = paramss.flatMap { params =>
+                val params = paramss.flatMap { params =>
                     val q"..$trees" = q"..$params"
                     trees.map {
                         case q"$mods val $tname: $tpt = $expr" =>
@@ -46,12 +43,22 @@ object One2OneConn extends phLogTrait {
                             q"$mods var $tname: $tpt = $expr"
                     }
                 }
+                val fields = stats.flatMap { params =>
+                    val q"..$trees" = q"..$params"
+                    trees.map {
+                        case q"$mods val $tname: $tpt = $expr" =>
+                            q"$mods var $tname: $tpt = $expr"
+                        case q"$mods var $tname: $tpt = $expr" =>
+                            q"$mods var $tname: $tpt = $expr"
+                        case x => x
+                    }.filter(_ != EmptyTree)
+                }
                 val conn_tree = q"var ${TermName(conn_name)}: Option[${TypeName(conn_type)}] = None"
-                val ctor_fields = fields ++ Seq(conn_tree)
-//                phLog("ctor_fields = " + ctor_fields)
+                val conn_fields = params ++ fields ++ Seq(conn_tree)
+//                phLog("conn_fields = " + conn_fields)
 
                 q"""
-                    $mods class $tpname[..$tparams] $ctorMods(..$ctor_fields) extends commonEntity with ..$parents { $self => ..$stats }
+                    $mods class $tpname[..$tparams] $ctorMods() extends commonEntity with ..$parents { $self => ..$conn_fields }
                 """
 
             case _ => c.abort(c.enclosingPosition, "Annotation @One2OneConn can be used only with class")

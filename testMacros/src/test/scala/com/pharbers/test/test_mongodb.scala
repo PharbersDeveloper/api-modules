@@ -4,9 +4,9 @@ import com.pharbers.jsonapi.json.circe.CirceJsonapiSupport
 import com.pharbers.jsonapi.model._
 import com.pharbers.macros.api.JsonapiConvert
 import com.pharbers.macros.formJsonapi
-import com.pharbers.model.{eq_cond, request}
 import com.pharbers.util.log.phLogTrait
 import com.pharbers.macros.convert.jsonapi.ResourceObjectReader
+import com.pharbers.mongodb.{Conditions, eq_cond, request}
 
 object test_mongodb extends App with CirceJsonapiSupport with phLogTrait {
 	val jsonData =
@@ -23,6 +23,9 @@ object test_mongodb extends App with CirceJsonapiSupport with phLogTrait {
 		  |				"data": [{
 		  |					"id": "2",
 		  |					"type": "eq_cond"
+		  |				}, {
+		  |					"id": "3",
+		  |					"type": "lt_cond"
 		  |				}]
 		  |			}
 		  |		}
@@ -34,16 +37,23 @@ object test_mongodb extends App with CirceJsonapiSupport with phLogTrait {
 		  |			"key": "phone",
 		  |			"value": "13720200891"
 		  |		}
+		  |	},{
+		  |		"id": "3",
+		  |		"type": "lt_cond",
+		  |		"attributes": {
+		  |			"key": "name",
+		  |			"value": "Alex"
+		  |		}
 		  |	}]
 		  |}
 		""".stripMargin
 	
 	val json_data = parseJson(jsonData)
 	val jsonapi = decodeJson[RootObject](json_data)
-//	phLog(jsonapi)
 	
 	val entity = formJsonapi(jsonapi)(new RootReader())
-	println(entity)
+//	println(entity)
+	println(entity.cond2QueryObj())
 	
 	class RootReader() extends JsonapiConvert[request] with phLogTrait {
 		
@@ -72,8 +82,8 @@ object test_mongodb extends App with CirceJsonapiSupport with phLogTrait {
 				}
 			}
 			
-			val eq_cond = expandInfo("conditions").map(fromResourceObject[eq_cond])
-			entity.eq_cond = Some(eq_cond.toList)
+			val conditions = expandInfo("conditions").map(fromResourceObject[eq_cond])
+			entity.conditions = Some(conditions.toList)
 			
 			entity
 		}

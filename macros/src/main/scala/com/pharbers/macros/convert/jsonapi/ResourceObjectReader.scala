@@ -1,6 +1,5 @@
 package com.pharbers.macros.convert.jsonapi
 
-
 import scala.reflect.macros.whitebox
 import com.pharbers.util.log.phLogTrait
 import scala.language.experimental.macros

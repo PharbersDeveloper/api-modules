@@ -15,7 +15,7 @@ object One2ManyConn extends phLogTrait {
         import c.universe._
 
         val class_tree = annottees.map(_.tree).toList match {
-            case q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends commonEntity with ..$parents { $self => ..$stats }" :: Nil =>
+            case q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) extends commonEntity[..$ptpname] with ..$parents { $self => ..$stats }" :: Nil =>
 //                phLog("mods = " + mods)
 //                phLog("tpname = " + tpname)
 //                phLog("tparams = " + tparams)
@@ -59,7 +59,7 @@ object One2ManyConn extends phLogTrait {
 //                phLog("conn_fields = " + conn_fields)
 
                 q"""{
-                    $mods class $tpname[..$tparams] $ctorMods() extends commonEntity with ..$parents { $self => ..$conn_fields }
+                    $mods class $tpname[..$tparams] $ctorMods() extends commonEntity[..$ptpname] with ..$parents { $self => ..$conn_fields }
                 }"""
 
             case _ => c.abort(c.enclosingPosition, "Annotation @One2ManyConn can be used only with class")

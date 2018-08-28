@@ -5,7 +5,7 @@ import com.pharbers.jsonapi.model.RootObject.ResourceObject
 import com.pharbers.macros.convert.jsonapi.ResourceObjectReader
 
 trait JsonapiConvert[T] {
-    def fromJsonapi(jsonapi: RootObject): T
+    def fromJsonapi(jsonapi: RootObject, package_local: String): T
     def toJsonapi(obj: T): RootObject
 
     def fromResourceObject[T: ResourceObjectReader](resource: ResourceObject): T =

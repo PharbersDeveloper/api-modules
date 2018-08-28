@@ -6,8 +6,8 @@ import com.pharbers.macros.api.{JsonapiConvert, MongoDBConvert}
 
 package object macros {
 
-    def formJsonapi[T: JsonapiConvert](jsonapi: RootObject): T =
-        implicitly[JsonapiConvert[T]].fromJsonapi(jsonapi)
+    def formJsonapi[T: JsonapiConvert](jsonapi: RootObject, package_local: String = "com.pharbers.model"): T =
+        implicitly[JsonapiConvert[T]].fromJsonapi(jsonapi, package_local)
     def toJsonapi[T: JsonapiConvert](obj: T) : RootObject =
         implicitly[JsonapiConvert[T]].toJsonapi(obj)
 

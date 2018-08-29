@@ -1,12 +1,13 @@
 //package com.pharbers.test
 //
-//import com.pharbers.model.profile
-//import com.pharbers.jsonapi.model._
-//import com.pharbers.util.log.phLogTrait
-//import com.pharbers.macros.convert.jsonapi._
-//import com.pharbers.jsonapi.json.circe.CirceJsonapiSupport
-//import com.pharbers.jsonapi.model.RootObject.ResourceObject
-//import com.pharbers.macros.convert.jsonapi.ResourceObjectReader
+import com.pharbers.model.profile
+import com.pharbers.jsonapi.model._
+import com.pharbers.util.log.phLogTrait
+import com.pharbers.macros.convert.jsonapi._
+import com.pharbers.jsonapi.json.circe.CirceJsonapiSupport
+import com.pharbers.jsonapi.model.RootObject.ResourceObject
+import com.pharbers.macros.api.JsonapiConvert
+import com.pharbers.macros.convert.jsonapi.ResourceObjectReader
 //
 //object test_resources_object extends App with CirceJsonapiSupport with phLogTrait {
 //    val test_data =
@@ -298,6 +299,6 @@ class resourceReader() extends ResourceObjectReader[profile] {
 	}
 }
 
-override def fromJsonapi(jsonapi: RootObject) = ???
+override def fromJsonapi(jsonapi: RootObject, package_local: String) = ???
 override def toJsonapi(obj: profile) = ???
 }

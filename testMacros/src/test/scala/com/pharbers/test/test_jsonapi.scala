@@ -65,12 +65,12 @@ object test_jsonapi extends App with CirceJsonapiSupport with phLogTrait {
     val jsonapi = decodeJson[RootObject](json_data)
     phLog(jsonapi)
 
-    val entity = formJsonapi(jsonapi)(new RootReader())
-    phLog(entity)
+//    val entity0 = formJsonapi(jsonapi)(new RootReader())
+//    phLog(entity0)
 
-//    import com.pharbers.macros.convert.jsonapi.JsonapiMacro._
-//    val entity = formJsonapi[profile](jsonapi)
-//    phLog(entity)
+    import com.pharbers.macros.convert.jsonapi.JsonapiMacro._
+    val entity1 = formJsonapi[profile](jsonapi)
+    phLog(entity1)
 
     val result = toJsonapi(entity)(new RootReader())
     println(result)

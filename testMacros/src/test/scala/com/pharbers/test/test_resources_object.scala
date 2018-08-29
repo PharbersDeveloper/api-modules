@@ -3,12 +3,12 @@
 //import com.pharbers.model.profile
 //import com.pharbers.jsonapi.model._
 //import com.pharbers.util.log.phLogTrait
-//import com.pharbers.macros.api.JsonapiConvert
+//import com.pharbers.macros.convert.jsonapi._
 //import com.pharbers.jsonapi.json.circe.CirceJsonapiSupport
 //import com.pharbers.jsonapi.model.RootObject.ResourceObject
 //import com.pharbers.macros.convert.jsonapi.ResourceObjectReader
 //
-//object test_resources_object extends App with CirceJsonapiSupport with phLogTrait with JsonapiConvert[profile] {
+//object test_resources_object extends App with CirceJsonapiSupport with phLogTrait {
 //    val test_data =
 //        """
 //          {
@@ -56,9 +56,9 @@
 //    val resources = jsonapi.data.get.asInstanceOf[ResourceObject]
 //    phLog(resources)
 //
-//    val entity = fromResourceObject(resources)(new resourceReader())
-////    import com.pharbers.macros.convert.jsonapi.ResourceObjectReader._
-////    val entity = fromResourceObject[profile](resources)()
+////    val entity = fromResourceObject(resources)(new resourceReader())
+//    import com.pharbers.macros.convert.jsonapi.ResourceObjectReader._
+//    val entity = fromResourceObject[profile](resources)
 //    println(entity.id)
 //    println(entity.`type`)
 //    println(entity.name)
@@ -151,9 +151,6 @@
 //                ))
 //        }
 //    }
-//
-//    override def fromJsonapi(jsonapi: RootObject, package_local: String) = ???
-//    override def toJsonapi(obj: profile) = ???
 //}
 
 object test_resources_object extends App with CirceJsonapiSupport with phLogTrait with JsonapiConvert[profile] {

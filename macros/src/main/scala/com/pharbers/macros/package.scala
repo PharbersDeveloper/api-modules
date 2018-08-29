@@ -2,9 +2,10 @@ package com.pharbers
 
 import com.mongodb.DBObject
 import com.pharbers.jsonapi.model.RootObject
-import com.pharbers.macros.api.{JsonapiConvert, MongoDBConvert}
 
 package object macros {
+    type JsonapiConvert[T] = com.pharbers.macros.api.JsonapiConvert[T]
+    type MongoDBConvert[T] = com.pharbers.macros.api.MongoDBConvert[T]
 
     def formJsonapi[T: JsonapiConvert](jsonapi: RootObject, package_local: String = "com.pharbers.model"): T =
         implicitly[JsonapiConvert[T]].fromJsonapi(jsonapi, package_local)

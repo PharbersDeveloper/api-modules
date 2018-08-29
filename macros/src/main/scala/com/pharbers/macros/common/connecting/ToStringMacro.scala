@@ -48,6 +48,7 @@ object ToStringMacro extends phLogTrait {
             case _ => c.abort(c.enclosingPosition, "Annotation @One2OneConn can be used only with class")
         }
 
+//        phLog(class_tree)
         c.Expr[Any](class_tree)
     }
 }

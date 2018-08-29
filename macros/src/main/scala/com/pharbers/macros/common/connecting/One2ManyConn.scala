@@ -38,10 +38,10 @@ object One2ManyConn extends phLogTrait {
                     val q"..$trees" = q"..$params"
                     trees.map {
                         case q"$mods val $tname: $tpt = $expr" =>
-                            q"$mods var $tname: $tpt = $expr"
+                            q"private[this] var $tname: $tpt = $expr"
 
                         case q"$mods var $tname: $tpt = $expr" =>
-                            q"$mods var $tname: $tpt = $expr"
+                            q"private[this] var $tname: $tpt = $expr"
                     }
                 }
                 val fields = stats.flatMap { params =>
@@ -54,12 +54,37 @@ object One2ManyConn extends phLogTrait {
                         case x => x
                     }.filter(_ != EmptyTree)
                 }
-                val conn_tree = q"var ${TermName(conn_name)}: Option[List[${TypeName(conn_type)}]] = None"
-                val conn_fields = params ++ fields ++ Seq(conn_tree)
+                val conn_many_var = q"var ${TermName(conn_name)}: Option[List[${TypeName(conn_type)}]] = None"
+                val conn_fields = params ++ fields ++ Seq(conn_many_var)
 //                phLog("conn_fields = " + conn_fields)
 
+                val conn_many_def = q"""
+                    private[this] def ${TermName("jsonapi_to_" + conn_name)}(rd: Option[RootObject.Data]): Option[List[${TypeName(conn_type)}]] = {
+                        rd match {
+                            case Some(reos: ResourceObjects) => Some(reos.array.map(fromResourceObject[${TypeName(conn_type)}](_)(ResourceReaderMaterialize)).toList)
+                            case _ => None
+                        }
+                    }
+
+                    private[this] def ${TermName(conn_name + "_to_jsonapi")}(rd: Option[RootObject.Data]): Option[List[${TypeName(conn_type)}]] = {
+                        rd match {
+                            case Some(reos: ResourceObjects) => Some(reos.array.map(fromResourceObject[${TypeName(conn_type)}](_)(ResourceReaderMaterialize)).toList)
+                            case _ => None
+                        }
+                    }
+                """
+//                phLog("conn_many_def = " + conn_many_def)
+
                 q"""{
-                    $mods class $tpname[..$tparams] $ctorMods() extends commonEntity[..$ptpname] with ..$parents { $self => ..$conn_fields }
+                    $mods class $tpname[..$tparams] $ctorMods() extends commonEntity[..$ptpname] with ..$parents { $self =>
+                        ..$conn_fields
+
+                        import com.pharbers.macros.convert.jsonapi._
+                        import com.pharbers.jsonapi.model.RootObject
+                        import com.pharbers.jsonapi.model.RootObject.ResourceObjects
+                        import com.pharbers.macros.convert.jsonapi.ResourceObjectReader.ResourceReaderMaterialize
+                        ..$conn_many_def
+                    }
                 }"""
 
             case _ => c.abort(c.enclosingPosition, "Annotation @One2ManyConn can be used only with class")

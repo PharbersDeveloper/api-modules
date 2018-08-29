@@ -69,8 +69,8 @@ object test_jsonapi extends App with CirceJsonapiSupport with phLogTrait {
 //    phLog(entity0)
 
     import com.pharbers.macros.convert.jsonapi.JsonapiMacro._
-    val entity1 = formJsonapi[profile](jsonapi)
-    phLog(entity1)
+    val entity = formJsonapi[profile](jsonapi)
+    phLog(entity)
 
     val result = toJsonapi(entity)(new RootReader())
     println(result)

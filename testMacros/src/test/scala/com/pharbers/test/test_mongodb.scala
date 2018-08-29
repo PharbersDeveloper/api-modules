@@ -2,8 +2,7 @@ package com.pharbers.test
 
 import com.pharbers.jsonapi.json.circe.CirceJsonapiSupport
 import com.pharbers.jsonapi.model._
-import com.pharbers.macros.api.JsonapiConvert
-import com.pharbers.macros.formJsonapi
+import com.pharbers.macros._
 import com.pharbers.util.log.phLogTrait
 import com.pharbers.mongodb._
 

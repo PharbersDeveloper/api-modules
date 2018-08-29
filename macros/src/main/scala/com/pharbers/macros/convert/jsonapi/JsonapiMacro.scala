@@ -71,7 +71,7 @@ object JsonapiMacro extends phLogTrait {
                 entity
             }
 
-            override def toJsonapi(obj: profile): RootObject = ???
+            override def toJsonapi(obj: $t_type_name): RootObject = ???
 
         }
         }"""

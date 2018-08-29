@@ -71,8 +71,78 @@ object JsonapiMacro extends phLogTrait {
                 entity
             }
 
-            override def toJsonapi(obj: $t_type_name): RootObject = ???
+            override def toJsonapi(obj: $t_type_name): RootObject = {
+                val runtime_mirror = ru.runtimeMirror(obj.getClass.getClassLoader)
+                val inst_mirror = runtime_mirror.reflect(obj)
+                val inst_symbol = inst_mirror.symbol
+                val class_symbol = inst_symbol.typeSignature
 
+                val class_field = inst_symbol.typeSignature.members.filter(p => p.isTerm && !p.isMethod).toList
+
+                /** 判断是否为关联到实体的one属性 **/
+                def isConnOneInject(f: ru.Symbol): Boolean =
+                    f.info <:< ru.typeOf[Option[_]] && f.info.typeArgs.length == 1 &&
+                        f.info.typeArgs.head.baseClasses.map(_.name.toString).contains("commonEntity")
+
+                /** 判断是否为关联到实体的many属性 **/
+                def isConnManyInject(f: ru.Symbol): Boolean =
+                    f.info <:< ru.typeOf[Option[List[_]]] && f.info.typeArgs.length == 1 &&
+                        f.info.typeArgs.head.typeArgs.head.baseClasses.map(_.name.toString).contains("commonEntity")
+
+                /** 解析关联属性 **/
+                val conn_data = class_field.filter(f => isConnOneInject(f) || isConnManyInject(f))
+                    .map { field =>
+                        val field_name = field.name.toString.trim
+                        val field_symbol = class_symbol.member(ru.TermName(field_name)).asTerm
+                        val field_mirror = inst_mirror.reflectField(field_symbol)
+                        val def_symbol = class_symbol.member(ru.TermName(field_name + "_to_jsonapi")).asMethod
+                        val def_mirror = inst_mirror.reflectMethod(def_symbol)
+                        field_name -> def_mirror(field_mirror.get).asInstanceOf[Option[RootObject.Data]]
+                    }
+
+                /** 阉割关联属性,只保留 id 和 type 存放到 relationships 中 **/
+                val relationships: Relationships = conn_data.map { case (k, v) =>
+                    val tmp = v match {
+                        case Some(reo: ResourceObject) =>
+                            Relationship(data =
+                                Some(ResourceObject(
+                                    `type` = reo.`type`,
+                                    id = reo.id
+                                ))
+                            )
+                        case Some(reos: ResourceObjects) =>
+                            Relationship(data =
+                                Some(ResourceObjects(
+                                    reos.array.map(reo => ResourceObject(
+                                        `type` = reo.`type`,
+                                        id = reo.id
+                                    ))
+                                ))
+                            )
+                        case None => Relationship()
+                    }
+                    k -> tmp
+                }.toMap
+
+                /** 将关联属性存到 included 中 **/
+                val included: Included = Included(ResourceObjects(
+                    conn_data.flatMap { case (k, v) =>
+                        v match {
+                            case Some(reo: ResourceObject) => Seq(reo)
+                            case Some(reos: ResourceObjects) => reos.array
+                            case None => Seq()
+                        }
+                    }
+                ))
+
+                RootObject(
+                    data = Some(
+                        toResourceObject(obj)/** 解析基础数据到attributes **/
+                                .copy(relationships = Some(relationships))/** 利用copy函数添加relationships **/
+                    ),
+                    included = Some(included)
+                )
+            }
         }
         }"""
 

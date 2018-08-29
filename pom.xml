@@ -12,6 +12,7 @@
         <module>jsonapi</module> 
         <module>pattern</module>
         <module>macros</module>
+        <module>testMacros</module>
     </modules>
 
 </project>

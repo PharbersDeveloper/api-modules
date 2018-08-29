@@ -8,7 +8,7 @@ import com.pharbers.macros.common.connecting.{One2ManyConn, ToStringMacro}
 @ToStringMacro
 case class request() extends commonEntity {
 	var res: String = ""
-	
+
 	def cond2QueryObj(): DBObject = {
 		var o: DBObject = DBObject()
 		conditions.getOrElse(Nil).foreach { x =>
@@ -18,6 +18,6 @@ case class request() extends commonEntity {
 		}
 		o
 	}
-	
-	
+
+
 }

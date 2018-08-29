@@ -65,9 +65,9 @@ object One2OneConn extends phLogTrait {
                         }
                     }
 
-                    private[this] def ${TermName(conn_name + "_to_jsonapi")}(rd: Option[RootObject.Data]): Option[${TypeName(conn_type)}] = {
-                        rd match {
-                            case Some(reo: ResourceObject) => Some(fromResourceObject[${TypeName(conn_type)}](reo)(ResourceReaderMaterialize))
+                    private[this] def ${TermName(conn_name + "_to_jsonapi")}(obj: Option[${TypeName(conn_type)}]): Option[RootObject.Data] = {
+                        obj match {
+                            case Some(entity: ${TypeName(conn_type)}) => Some(toResourceObject[${TypeName(conn_type)}](entity)(ResourceReaderMaterialize))
                             case _ => None
                         }
                     }

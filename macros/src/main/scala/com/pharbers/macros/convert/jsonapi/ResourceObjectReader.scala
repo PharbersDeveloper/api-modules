@@ -74,22 +74,6 @@ object ResourceObjectReader extends phLogTrait {
                 val class_symbol = inst_mirror.symbol
                 val class_field = class_symbol.typeSignature.members.filter(p => p.isTerm && !p.isMethod).toList
 
-                val companion_symbol = class_symbol.companion.asModule
-                val companion_mirror = runtime_mirror.reflectModule(companion_symbol)
-                val companion_instance = runtime_mirror.reflect(companion_mirror.instance)
-
-                def isConnOneInject(f: ru.Symbol): Boolean =
-                    f.info.baseType(ru.typeOf[Option[_]].typeSymbol) != ru.NoType &&
-                            f.info.typeArgs.length == 1 &&
-                            f.info.typeArgs.head.baseClasses.
-                                    map(_.name.toString).contains("commonEntity")
-
-                def isConnManyInject(f: ru.Symbol): Boolean =
-                    f.info.baseType(ru.typeOf[Option[List[_]]].typeSymbol) != ru.NoType &&
-                            f.info.typeArgs.length == 1 &&
-                            f.info.typeArgs.head.baseClasses.
-                                    map(_.name.toString).contains("commonEntity")
-
                 val attrs = class_field.map { f =>
                     val attr_mirror = inst_mirror.reflectField(f.asTerm)
                     val attr_val = attr_mirror.get
@@ -104,7 +88,7 @@ object ResourceObjectReader extends phLogTrait {
 
                 ResourceObject(
                     id = Some(obj.id),
-                    `type` = obj.`type`,
+                    `type` = class_symbol.name.toString,
                     attributes = Some(
                         attrs.toList
                     ))

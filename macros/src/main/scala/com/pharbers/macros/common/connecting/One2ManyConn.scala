@@ -66,9 +66,9 @@ object One2ManyConn extends phLogTrait {
                         }
                     }
 
-                    private[this] def ${TermName(conn_name + "_to_jsonapi")}(rd: Option[RootObject.Data]): Option[List[${TypeName(conn_type)}]] = {
-                        rd match {
-                            case Some(reos: ResourceObjects) => Some(reos.array.map(fromResourceObject[${TypeName(conn_type)}](_)(ResourceReaderMaterialize)).toList)
+                    private[this] def ${TermName(conn_name + "_to_jsonapi")}(obj: Option[List[${TypeName(conn_type)}]]): Option[RootObject.Data] = {
+                        obj match {
+                            case Some(entitys: List[_]) => Some(ResourceObjects(entitys.map(toResourceObject[${TypeName(conn_type)}](_)(ResourceReaderMaterialize))))
                             case _ => None
                         }
                     }

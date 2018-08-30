@@ -12,7 +12,7 @@ class TestJsonapiConvert() extends JsonapiConvert[people] with phLogTrait {
     import com.pharbers.jsonapi.model.RootObject._
     import com.pharbers.macros.convert.jsonapi.ResourceObjectReader._
 
-    override def fromJsonapi(jsonapi: RootObject, package_local: String): people = {
+    override def fromJsonapi(jsonapi: RootObject): people = {
         val entity_type = ru.typeOf[people]
         val runtime_mirror = ru.runtimeMirror(getClass.getClassLoader)
 
@@ -113,7 +113,7 @@ class TestJsonapiConvert() extends JsonapiConvert[people] with phLogTrait {
                                     reos.array.map(reo => ResourceObject(
                                         `type` = reo.`type`,
                                         id = reo.id
-                                    ))
+                                    )).distinct
                                 ))
                         )
                     case None => Relationship()
@@ -133,6 +133,8 @@ class TestJsonapiConvert() extends JsonapiConvert[people] with phLogTrait {
                         case Some(reos: ResourceObjects) => reos.array
                         case None => Seq()
                     }
+                }.foldLeft(List.empty[ResourceObject]){
+                    (result, cur) => if(result.exists(x => x.id == cur.id && x.`type` == cur.`type`)) result else result :+ cur
                 }
             )))
         }
@@ -146,4 +148,12 @@ class TestJsonapiConvert() extends JsonapiConvert[people] with phLogTrait {
         )
     }
 
+    override def toJsonapi(objs: List[people]): RootObject = {
+        val dataLst = objs.map(toJsonapi).map(_.data).filter(_.isDefined).map(_.get.asInstanceOf[ResourceObject])
+        val includedLst = objs.map(toJsonapi).map(_.included).filter(_.isDefined).flatMap(x => x.get.resourceObjects.array).distinct
+        RootObject(
+            data = if(dataLst.isEmpty) None else Some(ResourceObjects(dataLst)),
+            included = if(includedLst.isEmpty) None else Some(Included(ResourceObjects(includedLst)))
+        )
+    }
 }

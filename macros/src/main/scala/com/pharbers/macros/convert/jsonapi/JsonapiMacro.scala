@@ -62,11 +62,21 @@ object JsonapiMacro extends phLogTrait {
                 /** 将展开的 relationships 赋值到实体中 **/
                 val inst_mirror = runtime_mirror.reflect(entity)
                 expandInfo.foreach { case (k, v) =>
-                    val field_symbol = entity_type.member(ru.TermName(k)).asTerm
+                    val field_symbol = try {
+                        entity_type.member(ru.TermName(k)).asTerm
+                    } catch {
+                        case _: scala.ScalaReflectionException =>
+                              throw new Exception("not found member " + k + " in " + $t_name)
+                    }
                     val field_mirror = inst_mirror.reflectField(field_symbol)
                     val extract_symbol = entity_type.member(ru.TermName("jsonapi_to_" + k)).asMethod
                     val extract_mirror = inst_mirror.reflectMethod(extract_symbol)
-                    field_mirror.set(extract_mirror(v))
+                    try {
+                        field_mirror.set(extract_mirror(v))
+                    } catch {
+                        case _: java.lang.reflect.InvocationTargetException =>
+                            throw new Exception("unable to parse to " + $t_name + " connected " + k + " , param = " + v)
+                    }
                 }
                 entity
             }

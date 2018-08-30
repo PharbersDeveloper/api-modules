@@ -88,7 +88,7 @@ object ResourceObjectReader extends phLogTrait {
 
                 ResourceObject(
                     id = Some(obj.id),
-                    `type` = obj.`type`,
+                    `type` = class_symbol.name.toString,
                     attributes = Some(
                         attrs.toList
                     ))

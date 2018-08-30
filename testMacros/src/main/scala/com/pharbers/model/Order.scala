@@ -6,5 +6,5 @@ import com.pharbers.macros.common.connecting.ToStringMacro
 @ToStringMacro
 case class Order() extends commonEntity {
     var title: String = ""
-    val abc: Int = 1234
+    var abc: Int = 1234
 }

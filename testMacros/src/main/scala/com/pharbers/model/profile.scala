@@ -9,4 +9,8 @@ import com.pharbers.macros.common.connecting.{One2ManyConn, One2OneConn, ToStrin
 case class profile() extends commonEntity {
     var name: String = ""
     var age: Int = 0
+    var test1: Seq[Any] = Nil
+    var test2: Map[String, String] = Map().empty
+    var test3: List[Map[String, String]] = Nil
+    var test4: Map[String, Any] = Map().empty
 }

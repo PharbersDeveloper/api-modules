@@ -26,7 +26,7 @@ class TestJsonapiConvert() extends JsonapiConvert[profile] with phLogTrait {
 
         RootObject(
             data = Some(reo_includeds._1),
-            included = Some(reo_includeds._2)
+            included = if(reo_includeds._2.resourceObjects.array.isEmpty) None else Some(reo_includeds._2)
         )
     }
 

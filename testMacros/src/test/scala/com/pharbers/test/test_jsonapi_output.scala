@@ -10,37 +10,37 @@
 //    val entity = people()
 //    entity.id = "5b7e454a8fb8076c3c3304c7"
 //
-//    val contacter1 = contacter()
-//    contacter1.id = "contacter1"
-//    val contacter2 = contacter()
-//    contacter2.id = "contacter2"
-//    contacter2.address =  "contacter_address2"
-//    contacter2.mobile =  "contacter_mobile2"
-//    contacter2.name = "contacter_郭监护人2"
-//    contacter2.nickname = "contacter_nickname2"
-//    contacter2.wechatid = "contacter_wechatid2"
-//    entity.contacts = Some(contacter1 :: contacter2 :: Nil)
-//
-//    val guardian1 = guardian()
-//    guardian1.id = "guardian1"
-//    val guardian2 = guardian()
-//    guardian2.id = "guardian1"
-//    guardian2.address =  "guardian_address2"
-//    guardian2.mobile =  "guardian_mobile2"
-//    guardian2.name = "guardian_郭监护人2"
-//    guardian2.nickname = "guardian_nickname2"
-//    guardian2.wechatid = "guardian_wechatid2"
-//    entity.guardians = Some(guardian1 :: guardian2 :: Nil)
+////    val contacter1 = contacter()
+////    contacter1.id = "contacter1"
+////    val contacter2 = contacter()
+////    contacter2.id = "contacter2"
+////    contacter2.address =  "contacter_address2"
+////    contacter2.mobile =  "contacter_mobile2"
+////    contacter2.name = "contacter_郭监护人2"
+////    contacter2.nickname = "contacter_nickname2"
+////    contacter2.wechatid = "contacter_wechatid2"
+////    entity.contacts = Some(contacter1 :: contacter2 :: Nil)
+////
+////    val guardian1 = guardian()
+////    guardian1.id = "guardian1"
+////    val guardian2 = guardian()
+////    guardian2.id = "guardian1"
+////    guardian2.address =  "guardian_address2"
+////    guardian2.mobile =  "guardian_mobile2"
+////    guardian2.name = "guardian_郭监护人2"
+////    guardian2.nickname = "guardian_nickname2"
+////    guardian2.wechatid = "guardian_wechatid2"
+////    entity.guardians = Some(guardian1 :: guardian2 :: Nil)
 //
 //    phLog(entity)
 //    val entity2 = entity.copy()
-//    entity2.contacts = Some(contacter1 :: contacter2 :: Nil)
-//    entity2.guardians = Some(guardian1 :: guardian2 :: Nil)
-//    phLog(entity2)
+////    entity2.contacts = Some(contacter1 :: contacter2 :: Nil)
+////    entity2.guardians = Some(guardian1 :: guardian2 :: Nil)
+////    phLog(entity2)
 //
 ////    val result = toJsonapi(entity)(new TestJsonapiConvert())
 //    import com.pharbers.macros.convert.jsonapi.JsonapiMacro._
-//    val result = toJsonapi(List(entity, entity2))
+//    val result = toJsonapi(entity)
 //    phLog(result.asJson)
 //
 ////    val entity = profile()

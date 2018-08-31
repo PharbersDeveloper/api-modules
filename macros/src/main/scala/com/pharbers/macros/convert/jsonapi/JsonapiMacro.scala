@@ -41,9 +41,10 @@ object JsonapiMacro extends phLogTrait {
 
             override def toJsonapi(obj: $t_type_name): RootObject = {
                 val reo_includeds = toResourceObject(obj)
+
                 RootObject(
                     data = Some(reo_includeds._1),
-                    included = Some(reo_includeds._2)
+                    included = if(reo_includeds._2.resourceObjects.array.isEmpty) None else Some(reo_includeds._2)
                 )
             }
 

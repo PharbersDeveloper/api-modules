@@ -38,9 +38,39 @@ trait Common {
 		val db = mongoClient("Test")
 		val coll = db(loadJsonApiType(model))
 		val dbo = Struct2DBObject(model)
+		println(s"insert dbobjet => $dbo")
 		coll.insert(dbo)
 		mongoClient.close()
 		dbo
+	}
+
+	def updateObject[T: ClassTag](res: request): Int = {
+		val mongoClient = MongoClient("localhost", 27017)
+		val db = mongoClient("Test")
+		val coll = db(res.res)
+
+		val conditions = res.cond2QueryObj()
+		val updateData = res.cond2UpdateObj()
+
+		val className = classTag[T].toString()
+		val find = DBObjectBindObject(coll.findOne(conditions).get, className).asInstanceOf[T]
+		val dbo = Struct2DBObject(find) ++ updateData
+		println(s"update dbobjet => $dbo")
+		val result = coll.update(conditions, dbo)
+		result.getN
+	}
+
+	def deleteObject(res: request): Int = {
+		val mongoClient = MongoClient("localhost", 27017)
+		val db = mongoClient("Test")
+		val coll = db(res.res)
+
+		val conditions = res.cond2QueryObj()
+
+		println(s"delete dbobjet => $conditions")
+
+		val result = coll.remove(conditions)
+		result.getN
 	}
 	
 	def attrValue(field: ru.Symbol, dbo: DBObject) = {

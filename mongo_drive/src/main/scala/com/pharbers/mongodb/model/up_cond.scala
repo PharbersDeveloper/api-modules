@@ -7,7 +7,7 @@ import com.pharbers.macros.common.connecting.ToStringMacro
 @ToStringMacro
 case class up_cond() extends commonEntity with TraitConditions {
 	var key: String = ""
-	var value: String = ""
+	var value: Any = null
 
 	override def cond2QueryDBObject(): DBObject = DBObject()
 

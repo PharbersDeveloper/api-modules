@@ -159,11 +159,14 @@ trait MongoDBImpl extends DBTrait with dbutil {
 		val updateData = res.cond2UpdateObj()
 
 		val className = classTag[T].toString()
-		val find = DBObjectBindObject(coll.findOne(conditions), className).asInstanceOf[T]
-		val dbo = Struct2DBObject(find) ++ updateData
-		println(s"update dbobjet => $dbo")
-		val result = coll.update(conditions, dbo)
-		result.getN
+		val reVal = coll.findOne(conditions)
+		if (reVal.isEmpty) 0 {
+			val find = DBObjectBindObject(reVal, className).asInstanceOf[T]
+			val dbo = Struct2DBObject(find) ++ updateData
+			println(s"update dbobjet => $dbo")
+			val result = coll.update(conditions, dbo)
+			result.getN
+		}
 	}
 
 	override def deleteObject(res: request): Int = {

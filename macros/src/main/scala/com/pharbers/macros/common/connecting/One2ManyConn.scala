@@ -59,17 +59,21 @@ object One2ManyConn extends phLogTrait {
 //                phLog("conn_fields = " + conn_fields)
 
                 val conn_many_def = q"""
-                    private[this] def ${TermName("jsonapi_to_" + conn_name)}(rd: Option[RootObject.Data]): Option[List[${TypeName(conn_type)}]] = {
+                    private[this] def ${TermName("jsonapi_to_" + conn_name)}(rd: Option[RootObject.Data], included: Option[Included]): Option[List[${TypeName(conn_type)}]] = {
                         rd match {
-                            case Some(reos: ResourceObjects) => Some(reos.array.map(fromResourceObject[${TypeName(conn_type)}](_)(ResourceReaderMaterialize)).toList)
+                            case Some(reos: ResourceObjects) => Some(reos.array.map(x => fromResourceObject[${TypeName(conn_type)}](x, included)(ResourceReaderMaterialize)).toList)
                             case _ => None
                         }
                     }
 
-                    private[this] def ${TermName(conn_name + "_to_jsonapi")}(obj: Option[List[${TypeName(conn_type)}]]): Option[RootObject.Data] = {
+                    private[this] def ${TermName(conn_name + "_to_jsonapi")}(obj: Option[List[${TypeName(conn_type)}]]): (Option[RootObject.Data], Option[Included]) = {
                         obj match {
-                            case Some(entitys: List[_]) => Some(ResourceObjects(entitys.map(toResourceObject[${TypeName(conn_type)}](_)(ResourceReaderMaterialize))))
-                            case _ => None
+                            case Some(entitys: List[_]) =>
+                                val reos_includeds = entitys.map(toResourceObject[${TypeName(conn_type)}](_)(ResourceReaderMaterialize))
+                                val reos = reos_includeds.map(_._1)
+                                val includeds = Included(ResourceObjects(reos_includeds.map(_._2).flatMap(_.resourceObjects.array).distinct))
+                                (Some(ResourceObjects(reos)), Some(includeds))
+                            case _ => (None, None)
                         }
                     }
                 """
@@ -79,6 +83,7 @@ object One2ManyConn extends phLogTrait {
                     $mods class $tpname[..$tparams] $ctorMods() extends commonEntity[..$ptpname] with ..$parents { $self =>
                         ..$conn_fields
 
+                        import com.pharbers.jsonapi.model.Included
                         import com.pharbers.macros.convert.jsonapi._
                         import com.pharbers.jsonapi.model.RootObject
                         import com.pharbers.jsonapi.model.RootObject.ResourceObjects

@@ -58,17 +58,19 @@ object One2OneConn extends phLogTrait {
 //                phLog("conn_fields = " + conn_fields)
 
                 val conn_one_def = q"""
-                    private[this] def ${TermName("jsonapi_to_" + conn_name)}(rd: Option[RootObject.Data]): Option[${TypeName(conn_type)}] = {
+                    private[this] def ${TermName("jsonapi_to_" + conn_name)}(rd: Option[RootObject.Data], included: Option[Included]): Option[${TypeName(conn_type)}] = {
                         rd match {
-                            case Some(reo: ResourceObject) => Some(fromResourceObject[${TypeName(conn_type)}](reo)(ResourceReaderMaterialize))
+                            case Some(reo: ResourceObject) => Some(fromResourceObject[${TypeName(conn_type)}](reo, included)(ResourceReaderMaterialize))
                             case _ => None
                         }
                     }
 
-                    private[this] def ${TermName(conn_name + "_to_jsonapi")}(obj: Option[${TypeName(conn_type)}]): Option[RootObject.Data] = {
+                    private[this] def ${TermName(conn_name + "_to_jsonapi")}(obj: Option[${TypeName(conn_type)}]): (Option[RootObject.Data], Option[Included]) = {
                         obj match {
-                            case Some(entity: ${TypeName(conn_type)}) => Some(toResourceObject[${TypeName(conn_type)}](entity)(ResourceReaderMaterialize))
-                            case _ => None
+                            case Some(entity: ${TypeName(conn_type)}) =>
+                                val reo_included = toResourceObject[${TypeName(conn_type)}](entity)(ResourceReaderMaterialize)
+                                (Some(reo_included._1), Some(reo_included._2))
+                            case _ => (None, None)
                         }
                     }
                 """
@@ -79,6 +81,7 @@ object One2OneConn extends phLogTrait {
                     $mods class $tpname[..$tparams] $ctorMods() extends commonEntity[..$ptpname] with ..$parents { $self =>
                         ..$conn_fields
 
+                        import com.pharbers.jsonapi.model.Included
                         import com.pharbers.macros.convert.jsonapi._
                         import com.pharbers.jsonapi.model.RootObject
                         import com.pharbers.jsonapi.model.RootObject.ResourceObject

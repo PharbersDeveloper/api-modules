@@ -32,11 +32,12 @@ object ToStringMacro extends phLogTrait {
                 val total_fields = params ++ fields
 //                phLog("total_fields = " + total_fields)
 
-                val toStringBody = total_fields.map {
+                val toStringDefList = total_fields.map {
                     case q"$mods val $tname: $tpt = $expr" => q"""${tname.toString} + " = " + $tname"""
                     case q"$mods var $tname: $tpt = $expr" => q"""${tname.toString} + " = " + $tname"""
                     case _ => q""
-                }.filter(_ != EmptyTree).reduce { (a, b) => q"""$a + ", " + $b""" }
+                }.filter(_ != EmptyTree)
+                val toStringBody = if(toStringDefList.isEmpty) q""" "" """ else toStringDefList.reduce { (a, b) => q"""$a + ", " + $b""" }
                 val toStringDef = q"""override def toString(): String = ${tpname.toString()} + "(" + $toStringBody + ")""""
 
                 q"""

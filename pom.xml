@@ -11,6 +11,7 @@
     <modules>
         <module>jsonapi</module> 
         <module>pattern</module>
+        <module>mongo_drive</module>
         <module>macros</module>
         <module>testMacros</module>
     </modules>

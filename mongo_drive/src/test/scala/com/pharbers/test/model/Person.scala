@@ -9,7 +9,7 @@ case class Person() extends commonEntity {
 	var name: String = ""
 	var age: Int = 0
 	var phone: String = ""
-	var tips: List[String] = Nil
-	var tag: List[String Map Any] = Nil
-	var tag2: String Map List[Any] = Map.empty
+	var tips: List[_] = Nil
+	var tag: List[_] = Nil
+	var tag2: Map[_, _] = Map.empty
 }

@@ -2,10 +2,11 @@ package com.pharbers.mongodb.model
 
 import com.mongodb.casbah.Imports._
 import com.pharbers.macros.api.commonEntity
-import com.pharbers.macros.common.connecting.{One2ManyConn, ToStringMacro}
+import com.pharbers.macros.common.connecting.{One2ManyConn, One2OneConn, ToStringMacro}
 
 @One2ManyConn[eq_cond]("eq_conditions")
 @One2ManyConn[up_cond]("up_conditions")
+@One2OneConn[fm_cond]("fm_conditions")
 @ToStringMacro
 case class request() extends commonEntity {
 	var res: String = ""
@@ -29,5 +30,7 @@ case class request() extends commonEntity {
 		}
 		o
 	}
+	
+	def cond2fmQueryObj(): fm_cond = fm_conditions.get
 
 }

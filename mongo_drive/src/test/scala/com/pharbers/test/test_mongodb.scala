@@ -121,6 +121,12 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 			  |					"id": "2",
 			  |					"type": "eq_cond"
 			  |				}]
+			  |			},
+			  |         "fm_conditions": {
+			  |				"data": {
+			  |					"id": "3",
+			  |					"type": "fm_cond"
+			  |				}
 			  |			}
 			  |		}
 			  |	},
@@ -130,6 +136,13 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 			  |		"attributes": {
 			  |			"key": "phone",
 			  |			"value": "18510971868"
+			  |		}
+			  |	},{
+			  |		"id": "3",
+			  |		"type": "fm_cond",
+			  |		"attributes": {
+			  |			"skip": 2,
+			  |			"take": 2
 			  |		}
 			  |	}]
 			  |}
@@ -350,4 +363,5 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 	//	updataObject
 	//	updataObject2
 	//	deleteObject
+	
 }

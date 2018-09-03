@@ -16,6 +16,4 @@ case class eq_cond() extends commonEntity with TraitConditions {
 	override def isQueryCond(): Boolean = true
 	
 	override def isUpdateCond(): Boolean = false
-	
-	def queryConnect(): DBObject = DBObject()
 }

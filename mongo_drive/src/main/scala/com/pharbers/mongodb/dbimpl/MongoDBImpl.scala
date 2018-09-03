@@ -136,11 +136,13 @@ trait MongoDBImpl extends DBTrait with dbutil {
 		}
 	}
 
-	override def queryMultipleObject[T: ClassTag](res: request, sort : String = "date", skip : Int = 0, take : Int = 20) = {
+	override def queryMultipleObject[T: ClassTag](res: request, sort : String = "date") = {
 		val coll = dc.getCollection(res.res)
 		val conditions = res.cond2QueryObj()
 		val className = classTag[T].toString()
-		val t = coll.find(conditions).sort(DBObject(sort -> -1)).skip(skip).take(take).toList
+		val t = coll.find(conditions).sort(DBObject(sort -> -1)).
+			skip(res.cond2fmQueryObj().skip).
+			take(res.cond2fmQueryObj().take).toList
 		val result = t.map ( x => DBObjectBindObject(Some(x), className).asInstanceOf[T])
 		result
 	}
@@ -160,13 +162,13 @@ trait MongoDBImpl extends DBTrait with dbutil {
 
 		val className = classTag[T].toString()
 		val reVal = coll.findOne(conditions)
-		if (reVal.isEmpty) 0 {
+		if (!reVal.isEmpty) {
 			val find = DBObjectBindObject(reVal, className).asInstanceOf[T]
 			val dbo = Struct2DBObject(find) ++ updateData
 			println(s"update dbobjet => $dbo")
 			val result = coll.update(conditions, dbo)
 			result.getN
-		}
+		} else { 0 }
 	}
 
 	override def deleteObject(res: request): Int = {

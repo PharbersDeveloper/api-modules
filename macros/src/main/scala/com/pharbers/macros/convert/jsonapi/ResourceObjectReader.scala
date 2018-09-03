@@ -72,7 +72,12 @@ object ResourceObjectReader extends phLogTrait {
                 val attrs = resource.attributes.get.toList
                 val inst_mirror = runtime_mirror.reflect(entity)
                 attrs.foreach { attr =>
-                    val field_symbol = entity_type.decl(ru.TermName(attr.name)).asTerm
+                    val field_symbol = try {
+                        entity_type.decl(ru.TermName(attr.name)).asTerm
+                    } catch {
+                        case _: scala.ScalaReflectionException =>
+                            throw new Exception("not found member \"" + attr.name + "\" in " + ${"\"" + t_name + "\""})
+                    }
                     val field_mirror = inst_mirror.reflectField(field_symbol)
                     field_mirror.set(convertValueToAny(attr.value))
                 }
@@ -105,7 +110,7 @@ object ResourceObjectReader extends phLogTrait {
                         entity_type.member(ru.TermName(k)).asTerm
                     } catch {
                         case _: scala.ScalaReflectionException =>
-                            throw new Exception(s"not found member " + k + " in " + $t_name)
+                            throw new Exception("not found connected member \"" + k + "\" in " + ${"\"" + t_name + "\""})
                     }
                     val field_mirror = inst_mirror.reflectField(field_symbol)
                     val extract_symbol = entity_type.member(ru.TermName("jsonapi_to_" + k)).asMethod
@@ -114,7 +119,7 @@ object ResourceObjectReader extends phLogTrait {
                         field_mirror.set(extract_mirror(v, included))
                     } catch {
                         case _: java.lang.reflect.InvocationTargetException =>
-                            throw new Exception(s"unable to parse to " + $t_name + " connected " + k + " , param = " + v)
+                            throw new Exception("unable to parse to \"" + ${"\"" + t_name + "\""} + "\" connected \"" + k + "\" , param = " + v)
                     }
                 }
 

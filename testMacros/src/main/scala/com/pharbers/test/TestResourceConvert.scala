@@ -44,7 +44,12 @@ class TestResourceConvert extends ResourceObjectReader[profile] {
         val attrs = resource.attributes.get.toList
         val inst_mirror = runtime_mirror.reflect(entity)
         attrs.foreach { attr =>
-            val field_symbol = entity_type.decl(ru.TermName(attr.name)).asTerm
+            val field_symbol = try {
+                entity_type.decl(ru.TermName(attr.name)).asTerm
+            } catch {
+                case _: scala.ScalaReflectionException =>
+                    throw new Exception("not found member \"" + attr.name + "\" in " + "\"profile\"")
+            }
             val field_mirror = inst_mirror.reflectField(field_symbol)
             field_mirror.set(convertValueToAny(attr.value))
         }
@@ -58,11 +63,11 @@ class TestResourceConvert extends ResourceObjectReader[profile] {
                     val tmp = v.data match {
                         case Some(reo: ResourceObject) =>
                             Some(includeds.find(y => y.id == reo.id && y.`type` == reo.`type`)
-                                    .getOrElse(throw new Exception(s"not found " + reo.id + "&" + reo.`type` + " in includeds")))
+                                    .getOrElse(throw new Exception("not found " + reo.id + "&" + reo.`type` + " in includeds")))
                         case Some(reos: ResourceObjects) =>
                             Some(ResourceObjects(reos.array.map { reo =>
                                 includeds.find(y => y.id == reo.id && y.`type` == reo.`type`)
-                                        .getOrElse(throw new Exception(s"not found " + reo.id + "&" + reo.`type` + " in includeds"))
+                                        .getOrElse(throw new Exception("not found " + reo.id + "&" + reo.`type` + " in includeds"))
                             }))
                         case None => None
                     }
@@ -77,7 +82,7 @@ class TestResourceConvert extends ResourceObjectReader[profile] {
                 entity_type.member(ru.TermName(k)).asTerm
             } catch {
                 case _: scala.ScalaReflectionException =>
-                    throw new Exception(s"not found member " + k + " in " + "profile")
+                    throw new Exception("not found connected member \"" + k + "\" in " + "\"profile\"")
             }
             val field_mirror = inst_mirror.reflectField(field_symbol)
             val extract_symbol = entity_type.member(ru.TermName("jsonapi_to_" + k)).asMethod
@@ -86,7 +91,7 @@ class TestResourceConvert extends ResourceObjectReader[profile] {
                 field_mirror.set(extract_mirror(v, included))
             } catch {
                 case _: java.lang.reflect.InvocationTargetException =>
-                    throw new Exception(s"unable to parse to " + "profile" + " connected " + k + " , param = " + v)
+                    throw new Exception("unable to parse to \"" + "profile" + "\" connected \"" + k + "\" , param = " + v)
             }
         }
 

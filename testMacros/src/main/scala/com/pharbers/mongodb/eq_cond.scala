@@ -5,19 +5,17 @@ import com.pharbers.macros.api.commonEntity
 import com.pharbers.macros.common.connecting.ToStringMacro
 
 @ToStringMacro
-case class eq_cond() extends commonEntity with Conditions {
+case class eq_cond() extends commonEntity with TraitConditions {
 	var key: String = ""
 	var value: String = ""
 	
-	override def cond2QueryDBObject(): DBObject = {
-		DBObject(key -> value)
-	}
+	override def cond2QueryDBObject(): DBObject = DBObject(key -> value)
 	
 	override def cond2UpdateDBObectj(): DBObject = DBObject()
 	
 	override def isQueryCond(): Boolean = true
 	
-	override def isUpdataCond(): Boolean = false
+	override def isUpdateCond(): Boolean = false
 	
 	def queryConnect(): DBObject = DBObject()
 }

@@ -1,4 +1,4 @@
-package com.pharbers.mongodb.model
+package com.pharbers.macros.convert.mongodb.model
 
 import com.mongodb.casbah.Imports._
 import com.pharbers.macros.api.commonEntity
@@ -13,7 +13,7 @@ case class up_cond() extends commonEntity with TraitConditions {
 
 	override def cond2UpdateDBObectj(): DBObject = DBObject(key -> value)
 
-	override def isQueryCond(): Boolean = false
+	override def isQueryCond: Boolean = false
 
-	override def isUpdateCond(): Boolean = true
+	override def isUpdateCond: Boolean = true
 }

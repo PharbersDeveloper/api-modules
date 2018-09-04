@@ -3,16 +3,16 @@
 //import io.circe.Decoder.Result
 //import org.scalatest.FunSuite
 //import org.zalando.jsonapi.json.circe.{CirceJsonapiDecoders, CirceJsonapiEncoders}
-//import org.zalando.jsonapi.model.JsonApiObject.StringValue
-//import org.zalando.jsonapi.model.RootObject.ResourceObject
-//import org.zalando.jsonapi.model.{Attribute, Links, RootObject}
+//import org.zalando.jsonapi.model222.JsonApiObject.StringValue
+//import org.zalando.jsonapi.model222.RootObject.ResourceObject
+//import org.zalando.jsonapi.model222.{Attribute, Links, RootObject}
 //import org.zalando.jsonapi.{JsonapiRootObjectWriter, _}
 //
 ////import org.zalando.jsonapi.json.playjson.PlayJsonJsonapiFormat
 ////import org.zalando.jsonapi.json.sprayjson.SprayJsonJsonapiProtocol
-////import org.zalando.jsonapi.model.JsonApiObject.StringValue
-////import org.zalando.jsonapi.model.{Attribute, Links, RootObject}
-////import org.zalando.jsonapi.model.RootObject.ResourceObject
+////import org.zalando.jsonapi.model222.JsonApiObject.StringValue
+////import org.zalando.jsonapi.model222.{Attribute, Links, RootObject}
+////import org.zalando.jsonapi.model222.RootObject.ResourceObject
 ////import spray.json._
 //
 //import org.zalando.jsonapi.json.playjson.PlayJsonJsonapiSupport._

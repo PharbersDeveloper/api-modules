@@ -1,6 +1,6 @@
 //package com.pharbers.test
 //
-//import com.pharbers.model.{company, profile}
+//import com.pharbers.model222.{company, profile}
 //
 //object test_conn extends App {
 //

@@ -6,7 +6,7 @@ import com.pharbers.jsonapi.model.RootObject.ResourceObjects
 import scala.collection.immutable.{Seq ⇒ ImmutableSeq}
 
 /**
-  * The model package, containing partially covered Jsonapi specification.
+  * The model222 package, containing partially covered Jsonapi specification.
   */
 package object model {
 

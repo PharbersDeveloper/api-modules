@@ -1,4 +1,4 @@
-//package com.pharbers.test.model
+//package com.pharbers.test.model222
 //
 //import com.pharbers.macros.api.commonEntity
 //import com.pharbers.macros.common.connecting.ToStringMacro

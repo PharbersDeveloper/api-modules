@@ -34,11 +34,11 @@ object ResourceObjectReader extends phLogTrait {
         class $c_name extends ResourceObjectReader[$t_type] {
 
             import java.util.UUID
-            import com.pharbers.jsonapi.model._
+            import com.pharbers.jsonapi.model222._
             import scala.reflect.runtime.{universe => ru}
-            import com.pharbers.jsonapi.model.RootObject._
-            import com.pharbers.jsonapi.model.JsonApiObject._
-            import com.pharbers.jsonapi.model.implicits.JsonApiObjectValueConversions
+            import com.pharbers.jsonapi.model222.RootObject._
+            import com.pharbers.jsonapi.model222.JsonApiObject._
+            import com.pharbers.jsonapi.model222.implicits.JsonApiObjectValueConversions
 
             /** 基础类型 转 Jsonapi Value */
             implicit def convertAnyToValue: Any => Value = JsonApiObjectValueConversions.convertAnyToValue

@@ -81,10 +81,10 @@ object One2OneConn extends phLogTrait {
                     $mods class $tpname[..$tparams] $ctorMods() extends commonEntity[..$ptpname] with ..$parents { $self =>
                         ..$conn_fields
 
-                        import com.pharbers.jsonapi.model.Included
+                        import com.pharbers.jsonapi.model222.Included
                         import com.pharbers.macros.convert.jsonapi._
-                        import com.pharbers.jsonapi.model.RootObject
-                        import com.pharbers.jsonapi.model.RootObject.ResourceObject
+                        import com.pharbers.jsonapi.model222.RootObject
+                        import com.pharbers.jsonapi.model222.RootObject.ResourceObject
                         import com.pharbers.macros.convert.jsonapi.ResourceObjectReader.ResourceReaderMaterialize
                         ..$conn_one_def
                     }

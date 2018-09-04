@@ -2,9 +2,8 @@ package com.pharbers.pattern
 
 import scala.language.postfixOps
 import scala.concurrent.duration._
-import com.pharbers.pattern.entity.commonResult
 import com.pharbers.pattern.manager.SequenceSteps
-import com.pharbers.pattern.steps.{commonStep, timeout}
+import com.pharbers.pattern.steps.{commonResult, commonStep, timeout}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor.{Actor, ActorLogging, ActorRef, Cancellable, Props}

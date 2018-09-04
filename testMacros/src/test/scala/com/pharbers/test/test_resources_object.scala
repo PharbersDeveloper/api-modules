@@ -1,12 +1,12 @@
 //package com.pharbers.test
 //
 //import io.circe.syntax._
-//import com.pharbers.model222._
-//import com.pharbers.jsonapi.model222._
+//import com.pharbers.model._
+//import com.pharbers.jsonapi.model._
 //import com.pharbers.util.log.phLogTrait
 //import com.pharbers.macros.convert.jsonapi._
 //import com.pharbers.jsonapi.json.circe.CirceJsonapiSupport
-//import com.pharbers.jsonapi.model222.RootObject.ResourceObject
+//import com.pharbers.jsonapi.model.RootObject.ResourceObject
 //
 //object test_resources_object extends App with CirceJsonapiSupport with phLogTrait {
 //    val test_data =

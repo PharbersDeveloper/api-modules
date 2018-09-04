@@ -1,8 +1,6 @@
 package com.pharbers.macros.api
 
-import com.pharbers.pattern.entity.commonResult
-
-class commonEntity extends commonResult {
+class commonEntity{
     var id: String = ""
     var `type`: String = ""
 }

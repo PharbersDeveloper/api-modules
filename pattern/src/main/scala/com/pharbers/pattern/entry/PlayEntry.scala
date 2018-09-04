@@ -12,9 +12,8 @@ import play.api.libs.json.JsValue
 
 import scala.concurrent.duration._
 import akka.actor.{ActorSystem, Props}
-import com.pharbers.pattern.steps.excute
+import com.pharbers.pattern.steps.{commonResult, excute}
 import play.api.libs.Files.TemporaryFile
-import com.pharbers.pattern.entity.commonResult
 import com.pharbers.pattern.manager.SequenceSteps
 
 object PlayEntry {

@@ -107,7 +107,7 @@
                 <!-- pharbers lib -->
                 <dependency>
                     <groupId>com.pharbers</groupId>
-                    <artifactId>macros</artifactId>
+                    <artifactId>pattern</artifactId>
                     <version>1.0</version>
                 </dependency>
 

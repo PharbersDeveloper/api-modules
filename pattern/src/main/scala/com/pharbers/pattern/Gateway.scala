@@ -1,10 +1,9 @@
 package com.pharbers.pattern
 
 import play.api.libs.json.Json.toJson
-import com.pharbers.pattern.entity.commonResult
 import com.pharbers.pattern.manager.SequenceSteps
 import akka.actor.{Actor, ActorLogging, ActorRef, Terminated}
-import com.pharbers.pattern.steps.{commonError, commonStep, excute, timeout}
+import com.pharbers.pattern.steps._
 
 class Gateway extends Actor with ActorLogging {
 

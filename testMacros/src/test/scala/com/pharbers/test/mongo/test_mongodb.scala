@@ -1,171 +1,162 @@
 package com.pharbers.test.mongo
 
-import com.pharbers.macros._
 import com.pharbers.util.log.phLogTrait
 import com.pharbers.test.mongo.model.Person
 import com.pharbers.jsonapi.model.RootObject
 import com.pharbers.pattern.mongo.model.request
-import com.pharbers.macros.convert.mongodb.{MongoMacro, mongoDBImpl}
-import com.pharbers.macros.convert.jsonapi.JsonapiMacro._
 import com.pharbers.jsonapi.json.circe.CirceJsonapiSupport
-import com.pharbers.pattern.mongo.mongoImpl
 
 object test_mongodb extends App with CirceJsonapiSupport with phLogTrait {
-	
-	def findOne = {
-		val jsonData =
-			"""
-			  |{
-			  |	"data": {
-			  |		"id": "1",
-			  |		"type": "request",
-			  |		"attributes": {
-			  |			"res": "test"
-			  |		},
-			  |		"relationships": {
-			  |			"eq_conditions": {
-			  |				"data": [{
-			  |					"id": "2",
-			  |					"type": "eq_cond"
-			  |				}, {
-			  |					"id": "3",
-			  |					"type": "eq_cond"
-			  |				}]
-			  |			}
-			  |		}
-			  |	},
-			  |	"included": [{
-			  |		"id": "2",
-			  |		"type": "eq_cond",
-			  |		"attributes": {
-			  |			"key": "phone",
-			  |			"value": "18510971868"
-			  |		}
-			  |	},{
-			  |		"id": "3",
-			  |		"type": "eq_cond",
-			  |		"attributes": {
-			  |			"key": "name",
-			  |			"value": "Alex"
-			  |		}
-			  |	}]
-			  |}
-			""".stripMargin
 
-		val json_data = parseJson(jsonData)
-		val jsonapi = decodeJson[RootObject](json_data)
+    import com.pharbers.macros._
+    import com.pharbers.pattern.mongo.test_db_inst._
+    import com.pharbers.macros.convert.jsonapi.JsonapiMacro._
 
-		val requests = formJsonapi[request](jsonapi)
-		//		phLog(requests.cond2QueryObj())
+    def findOne: Option[Person] = {
+        val jsonData =
+            """
+              			  |{
+              			  |	"data": {
+              			  |		"id": "1",
+              			  |		"type": "request",
+              			  |		"attributes": {
+              			  |			"res": "test"
+              			  |		},
+              			  |		"relationships": {
+              			  |			"eq_conditions": {
+              			  |				"data": [{
+              			  |					"id": "2",
+              			  |					"type": "eq_cond"
+              			  |				}, {
+              			  |					"id": "3",
+              			  |					"type": "eq_cond"
+              			  |				}]
+              			  |			}
+              			  |		}
+              			  |	},
+              			  |	"included": [{
+              			  |		"id": "2",
+              			  |		"type": "eq_cond",
+              			  |		"attributes": {
+              			  |			"key": "phone",
+              			  |			"value": "18510971868"
+              			  |		}
+              			  |	},{
+              			  |		"id": "3",
+              			  |		"type": "eq_cond",
+              			  |		"attributes": {
+              			  |			"key": "name",
+              			  |			"value": "Alex"
+              			  |		}
+              			  |	}]
+              			  |}
+            			""".stripMargin
+        val json_data = parseJson(jsonData)
+        val jsonapi = decodeJson[RootObject](json_data)
 
-//		val result = queryDBInstance("test").get.queryObject[Person](requests)
-//		phLog(result)
+        val requests = formJsonapi[request](jsonapi)
+        println(requests)
 
-	}
-	
-	def findPerson = {
-		val jsonData =
-			"""
-			  |{
-			  |	"data": {
-			  |		"id": "1",
-			  |		"type": "request",
-			  |		"attributes": {
-			  |			"res": "Person"
-			  |		},
-			  |		"relationships": {
-			  |			"eq_conditions": {
-			  |				"data": [{
-			  |					"id": "2",
-			  |					"type": "eq_cond"
-			  |				}]
-			  |			}
-			  |		}
-			  |	},
-			  |	"included": [{
-			  |		"id": "2",
-			  |		"type": "eq_cond",
-			  |		"attributes": {
-			  |			"key": "name",
-			  |			"value": "Alex"
-			  |		}
-			  |	}]
-			  |}
-			""".stripMargin
-		
-		val json_data = parseJson(jsonData)
-		val jsonapi = decodeJson[RootObject](json_data)
-		
-		val requests = formJsonapi[request](jsonapi)
-		println(requests)
-		//				phLog(requests.cond2QueryObj())
+        val result = queryObject[Person](requests)
+        println(result)
+        result
+    }
 
-		val a = new mongoImpl().queryDBInstance("test").get
-		val abc = queryObject(requests)(a)
-		println(abc)
-//		val mogo = new MongoMacro()
-//		val result = mogo.queryDBInstance("test").get.queryObject[Person](requests)
-//		phLog(result)
-		//		result.tips.foreach(phLog(_))
-		//		result.tag.foreach { x =>
-		//			phLog(x)
-		//		}
-	}
-	
-	findPerson
-	
-//	def queryMultipleObject = {
-//		val jsonData =
-//			"""
-//			  |{
-//			  |	"data": {
-//			  |		"id": "1",
-//			  |		"type": "request",
-//			  |		"attributes": {
-//			  |			"res": "test2"
-//			  |		},
-//			  |		"relationships": {
-//			  |			"eq_conditions": {
-//			  |				"data": [{
-//			  |					"id": "2",
-//			  |					"type": "eq_cond"
-//			  |				}]
-//			  |			},
-//			  |         "fm_conditions": {
-//			  |				"data": {
-//			  |					"id": "3",
-//			  |					"type": "fm_cond"
-//			  |				}
-//			  |			}
-//			  |		}
-//			  |	},
-//			  |	"included": [{
-//			  |		"id": "2",
-//			  |		"type": "eq_cond",
-//			  |		"attributes": {
-//			  |			"key": "phone",
-//			  |			"value": "18510971868"
-//			  |		}
-//			  |	},{
-//			  |		"id": "3",
-//			  |		"type": "fm_cond",
-//			  |		"attributes": {
-//			  |			"skip": 2,
-//			  |			"take": 2
-//			  |		}
-//			  |	}]
-//			  |}
-//			""".stripMargin
+    def findPerson: Option[Person] = {
+        val jsonData =
+            """
+              			  |{
+              			  |	"data": {
+              			  |		"id": "1",
+              			  |		"type": "request",
+              			  |		"attributes": {
+              			  |			"res": "Person"
+              			  |		},
+              			  |		"relationships": {
+              			  |			"eq_conditions": {
+              			  |				"data": [{
+              			  |					"id": "2",
+              			  |					"type": "eq_cond"
+              			  |				}]
+              			  |			}
+              			  |		}
+              			  |	},
+              			  |	"included": [{
+              			  |		"id": "2",
+              			  |		"type": "eq_cond",
+              			  |		"attributes": {
+              			  |			"key": "name",
+              			  |			"value": "Alex"
+              			  |		}
+              			  |	}]
+              			  |}
+            			""".stripMargin
+        val json_data = parseJson(jsonData)
+        val jsonapi = decodeJson[RootObject](json_data)
+
+        val requests = formJsonapi[request](jsonapi)
+        println(requests)
+
+        val result = queryObject[Person](requests)
+        println(result)
+        result
+    }
+
+    findOne
+    findPerson
+
+//    def queryMultipleObject = {
+//        val jsonData =
+//            """
+//            |{
+//            |	"data": {
+//            |		"id": "1",
+//            |		"type": "request",
+//            |		"attributes": {
+//            |			"res": "test2"
+//            |		},
+//            |		"relationships": {
+//            |			"eq_conditions": {
+//            |				"data": [{
+//            |					"id": "2",
+//            |					"type": "eq_cond"
+//            |				}]
+//            |			},
+//            |         "fm_conditions": {
+//            |				"data": {
+//            |					"id": "3",
+//            |					"type": "fm_cond"
+//            |				}
+//            |			}
+//            |		}
+//            |	},
+//            |	"included": [{
+//            |		"id": "2",
+//            |		"type": "eq_cond",
+//            |		"attributes": {
+//            |			"key": "phone",
+//            |			"value": "18510971868"
+//            |		}
+//            |	},{
+//            |		"id": "3",
+//            |		"type": "fm_cond",
+//            |		"attributes": {
+//            |			"skip": 2,
+//            |			"take": 2
+//            |		}
+//            |	}]
+//            |}
+//            """.stripMargin
 //
-//		val json_data = parseJson(jsonData)
-//		val jsonapi = decodeJson[RootObject](json_data)
+//        val json_data = parseJson(jsonData)
+//        val jsonapi = decodeJson[RootObject](json_data)
 //
-//		val requests = formJsonapi[request](jsonapi)
+//        val requests = formJsonapi[request](jsonapi)
 //
-//		val result = queryDBInstance("test").get.queryMultipleObject[Person](requests)
-//		phLog(result)
+//        val result = queryMultipleObject[Person](requests)
+//        phLog(result)
 //
-//	}
+//    }
 //
 //	def insertObject = {
 //		val jsonData =
@@ -363,13 +354,13 @@ object test_mongodb extends App with CirceJsonapiSupport with phLogTrait {
 //		val result = queryDBInstance("test").get.updateObject[test](requests)
 //		phLog(result)
 //	}
-	
-	
-	//	findOne
-	//	findPerson
-	//	queryMultipleObject
-	//	insertObject
-	//	updataObject
-	//	updataObject2
-	//	deleteObjec
+
+
+    //	findOne
+    //	findPerson
+    //	queryMultipleObject
+    //	insertObject
+    //	updataObject
+    //	updataObject2
+    //	deleteObjec
 }

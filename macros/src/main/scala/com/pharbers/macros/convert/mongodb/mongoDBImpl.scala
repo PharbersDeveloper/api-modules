@@ -8,6 +8,7 @@ import com.pharbers.mongodb.dbconnect.ConnectionInstance
 
 class mongoDBImpl[R <: TraitRequest](override val di: ConnectionInstance) extends DBTrait[R] with dbutil {
     def queryObject[T: ClassTag](res: R): Option[T] = {
+        val a = implicitly[ClassTag[T]].runtimeClass
         val coll = di.getCollection(res.res)
         val conditions = res.cond2QueryObj()
         val className = classTag[T].toString()

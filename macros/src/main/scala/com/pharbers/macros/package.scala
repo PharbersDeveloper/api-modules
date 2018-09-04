@@ -21,7 +21,7 @@ package object macros {
 
     def queryObject[T: ClassTag](res: TraitRequest)(implicit dbt: DBTrait[TraitRequest]): Option[T] = dbt.queryObject[T](res)
 
-    def queryMultipleObject[T](res: TraitRequest, sort: String = "date")(implicit dbt: DBTrait[TraitRequest]): List[T] = dbt.queryMultipleObject(res, sort)
+    def queryMultipleObject[T: ClassTag](res: TraitRequest, sort: String = "date")(implicit dbt: DBTrait[TraitRequest]): List[T] = dbt.queryMultipleObject(res, sort)
 
     def insertObject[T: ClassTag](model: T)(implicit dbt: DBTrait[TraitRequest]): DBObject = dbt.insertObject(model)
 

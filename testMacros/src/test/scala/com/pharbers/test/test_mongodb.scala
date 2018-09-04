@@ -1,15 +1,70 @@
+package com.pharbers.test
+
+import com.mongodb.DBObject
 import com.pharbers.jsonapi.json.circe.CirceJsonapiSupport
-import com.pharbers.jsonapi.model._
-import com.pharbers.macros._
-import com.pharbers.model.{Consumers, Person, test}
+import com.pharbers.jsonapi.model.RootObject
+import com.pharbers.pattern.mongo.model.request
+import com.pharbers.test.mongo.model.{Consumers, Order, Person}
 import com.pharbers.util.log.phLogTrait
-import com.pharbers.mongodb._
-import com.pharbers.macros.convert.jsonapi.JsonapiMacro._
 
-
-object test_mongodb extends App with CirceJsonapiSupport with phLogTrait with Common {
-
-	def findOne = {
+object test_mongodb extends App with CirceJsonapiSupport with phLogTrait {
+	
+	import com.pharbers.macros._
+	import com.pharbers.macros.convert.jsonapi.JsonapiMacro._
+	import com.pharbers.pattern.mongo.test_db_inst._
+	
+	def findOne: Option[Person] = {
+		val jsonData =
+			"""
+			  			  |{
+			  			  |	"data": {
+			  			  |		"id": "1",
+			  			  |		"type": "request",
+			  			  |		"attributes": {
+			  			  |			"res": "test"
+			  			  |		},
+			  			  |		"relationships": {
+			  			  |			"eq_conditions": {
+			  			  |				"data": [{
+			  			  |					"id": "2",
+			  			  |					"type": "eq_cond"
+			  			  |				}, {
+			  			  |					"id": "3",
+			  			  |					"type": "eq_cond"
+			  			  |				}]
+			  			  |			}
+			  			  |		}
+			  			  |	},
+			  			  |	"included": [{
+			  			  |		"id": "2",
+			  			  |		"type": "eq_cond",
+			  			  |		"attributes": {
+			  			  |			"key": "phone",
+			  			  |			"value": "18510971868"
+			  			  |		}
+			  			  |	},{
+			  			  |		"id": "3",
+			  			  |		"type": "eq_cond",
+			  			  |		"attributes": {
+			  			  |			"key": "name",
+			  			  |			"value": "Alex"
+			  			  |		}
+			  			  |	}]
+			  			  |}
+			""".stripMargin
+		val json_data = parseJson(jsonData)
+		val jsonapi = decodeJson[RootObject](json_data)
+		
+		val requests = formJsonapi[request](jsonapi)
+		println(requests)
+		
+		val result = queryObject[Person](requests)
+		println(result)
+		result
+	}
+	
+	//    findOne
+	def queryMulti: List[Person] = {
 		val jsonData =
 			"""
 			  |{
@@ -17,17 +72,20 @@ object test_mongodb extends App with CirceJsonapiSupport with phLogTrait with Co
 			  |		"id": "1",
 			  |		"type": "request",
 			  |		"attributes": {
-			  |			"res": "test"
+			  |			"res": "test2"
 			  |		},
 			  |		"relationships": {
-			  |			"conditions": {
+			  |			"eq_conditions": {
 			  |				"data": [{
 			  |					"id": "2",
 			  |					"type": "eq_cond"
-			  |				}, {
-			  |					"id": "3",
-			  |					"type": "eq_cond"
 			  |				}]
+			  |			},
+			  |         "fm_conditions": {
+			  |				"data": {
+			  |					"id": "3",
+			  |					"type": "fm_cond"
+			  |				}
 			  |			}
 			  |		}
 			  |	},
@@ -40,67 +98,27 @@ object test_mongodb extends App with CirceJsonapiSupport with phLogTrait with Co
 			  |		}
 			  |	},{
 			  |		"id": "3",
-			  |		"type": "eq_cond",
+			  |		"type": "fm_cond",
 			  |		"attributes": {
-			  |			"key": "name",
-			  |			"value": "Alex"
+			  |			"skip": 0,
+			  |			"take": 2
 			  |		}
 			  |	}]
 			  |}
 			""".stripMargin
-
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-
-
+		
 		val requests = formJsonapi[request](jsonapi)
-		phLog(requests.cond2QueryObj())
-
-		val result = queryObject[Person](requests)
-		println(result)
-	}
-
-	def find = {
-		val jsonData =
-			"""
-			  |{
-			  |	"data": {
-			  |		"id": "1",
-			  |		"type": "request",
-			  |		"attributes": {
-			  |			"res": "test2"
-			  |		},
-			  |		"relationships": {
-			  |			"conditions": {
-			  |				"data": [{
-			  |					"id": "2",
-			  |					"type": "eq_cond"
-			  |				}]
-			  |			}
-			  |		}
-			  |	},
-			  |	"included": [{
-			  |		"id": "2",
-			  |		"type": "eq_cond",
-			  |		"attributes": {
-			  |			"key": "phone",
-			  |			"value": "18510971868"
-			  |		}
-			  |	}]
-			  |}
-			""".stripMargin
-
-		val json_data = parseJson(jsonData)
-		val jsonapi = decodeJson[RootObject](json_data)
-
-		val requests = formJsonapi[request](jsonapi)
-		phLog(requests.cond2QueryObj())
-
+		println(requests)
+		
 		val result = queryMultipleObject[Person](requests)
-		result.foreach(a => println(a.name))
+		println(result)
+		result
 	}
-
-	def insert = {
+	
+	//    queryMulti
+	def insert: DBObject = {
 		val jsonData =
 			"""
 			  |{
@@ -131,20 +149,23 @@ object test_mongodb extends App with CirceJsonapiSupport with phLogTrait with Co
 			  |	}]
 			  |}
 			""".stripMargin
-
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-
+		
 		val consumers = formJsonapi[Consumers](jsonapi)
-
-		insertObject[Consumers](consumers)
-//		consumers.orders.get.foreach { x =>
-//			insertObject[Order](x)
-//		}
-		phLog(consumers)
+		println(consumers)
+		
+		val result = insertObject[Consumers](consumers)
+		println(consumers.orders)
+		consumers.orders.get.foreach { x =>
+			insertObject[Order](x)
+		}
+		println(result)
+		result
 	}
-
-	def updata = {
+	
+	//	insert
+	def updata: Int = {
 		val jsonData =
 			"""
 			  |{
@@ -152,7 +173,7 @@ object test_mongodb extends App with CirceJsonapiSupport with phLogTrait with Co
 			  |		"id": "1",
 			  |		"type": "request",
 			  |		"attributes": {
-			  |			"res": "test"
+			  |			"res": "Person"
 			  |		},
 			  |		"relationships": {
 			  |			"eq_conditions": {
@@ -173,29 +194,31 @@ object test_mongodb extends App with CirceJsonapiSupport with phLogTrait with Co
 			  |		"id": "2",
 			  |		"type": "eq_cond",
 			  |		"attributes": {
-			  |			"key": "phone",
-			  |			"value": "18510971868"
+			  |			"key": "name",
+			  |			"value": "Alex"
 			  |		}
 			  |	},{
 			  |		"id": "3",
 			  |		"type": "up_cond",
 			  |		"attributes": {
-			  |			"key": "phone",
-			  |			"value": "18510971868"
+			  |			"key": "name",
+			  |			"value": "Alex2"
 			  |		}
 			  |	}]
 			  |}
 			""".stripMargin
-
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-
+		
 		val requests = formJsonapi[request](jsonapi)
-
-		updateObject[test](requests)
-
+		println(requests)
+		
+		val result = updateObject[Person](requests)
+		println(result)
+		result
 	}
-
+//	updata
+	
 	def delete = {
 		val jsonData =
 			"""
@@ -225,17 +248,15 @@ object test_mongodb extends App with CirceJsonapiSupport with phLogTrait with Co
 			  |	}]
 			  |}
 			""".stripMargin
-
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-
+		
 		val requests = formJsonapi[request](jsonapi)
-		deleteObject(requests)
+		println(requests)
+		
+		val result = deleteObject(requests)
+		phLog(result)
 	}
-
 //	delete
-//	updata
-//	insert
-//	find
-//	findOne
+	
 }

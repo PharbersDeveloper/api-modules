@@ -1,13 +1,12 @@
 package com.pharbers.macros.convert.mongodb
 
 import com.mongodb.casbah.Imports._
-
 import scala.reflect.{ClassTag, classTag}
 import com.mongodb.casbah.Imports.DBObject
 import com.pharbers.mongodb.dbtrait.DBTrait
 import com.pharbers.mongodb.dbconnect.ConnectionInstance
 
-class mongoDBImpl[R <: TraitConditions](override val di: ConnectionInstance) extends DBTrait[R] with dbutil {
+class mongoDBImpl[R <: TraitRequest](override val di: ConnectionInstance) extends DBTrait[R] with dbutil {
     def queryObject[T: ClassTag](res: R): Option[T] = {
         val coll = di.getCollection(res.res)
         val conditions = res.cond2QueryObj()
@@ -23,8 +22,8 @@ class mongoDBImpl[R <: TraitConditions](override val di: ConnectionInstance) ext
         val conditions = res.cond2QueryObj()
         val className = classTag[T].toString()
         val t = coll.find(conditions).sort(DBObject(sort -> -1)).
-                skip(res.cond2fmQueryObj().skip).
-                take(res.cond2fmQueryObj().take).toList
+                skip(res.cond2fmQueryObj()._1).
+                take(res.cond2fmQueryObj()._2).toList
         val result = t.map(x => DBObjectBindObject(Some(x), className).asInstanceOf[T])
         result
     }

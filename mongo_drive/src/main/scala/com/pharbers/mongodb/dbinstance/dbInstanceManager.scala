@@ -7,8 +7,8 @@ import com.pharbers.mongodb.dbconnect.{ConnectionInstance, dbInstance}
 
 import scala.xml.Node
 
-trait dbInstanceManager extends PharbersInjectModule {
-    def instance(ci: ConnectionInstance): DBTrait
+trait dbInstanceManager[R] extends PharbersInjectModule {
+    def instance(ci: ConnectionInstance): DBTrait[R]
 
     override val id: String = "mongodb-connect-nodes"
     override val configPath: String = "pharbers_config/db_manager.xml"
@@ -27,14 +27,14 @@ trait dbInstanceManager extends PharbersInjectModule {
     }
     override lazy val config: ConfigImpl = loadConfig(configDir + "/" + configPath)
 
-    lazy val connections: List[(String, DBTrait)] =
+    lazy val connections: List[(String, DBTrait[R])] =
         config.mc.find(p => p._1 == md.head).get._2
                 .asInstanceOf[List[(String, ConnectionInstance)]]
                 .map(iter => iter._1 -> instance(iter._2))
 
-    def queryDBInstance(name: String): Option[DBTrait] =
+    def queryDBInstance(name: String): Option[DBTrait[R]] =
         connections.find(p => p._1 == name).flatMap(x => Some(x._2))
 
     def queryDBConnection(name: String): Option[ConnectionInstance] =
-        connections.find(p => p._1 == name).flatMap(x => Some(x._2.asInstanceOf[DBTrait].di))
+        connections.find(p => p._1 == name).flatMap(x => Some(x._2.asInstanceOf[DBTrait[R]].di))
 }

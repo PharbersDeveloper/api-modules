@@ -27,9 +27,9 @@ object JsonapiMacro extends phLogTrait {
         val q"..$clsdef" = q"""{
         class $tmp_class_name extends JsonapiConvert[$t_type_name] {
 
-            import com.pharbers.jsonapi.model._
+            import com.pharbers.jsonapi.model222._
             import com.pharbers.macros.convert.jsonapi._
-            import com.pharbers.jsonapi.model.RootObject._
+            import com.pharbers.jsonapi.model222.RootObject._
             import com.pharbers.macros.convert.jsonapi.ResourceObjectReader._
 
             override def fromJsonapi(jsonapi: RootObject): $t_type_name = {

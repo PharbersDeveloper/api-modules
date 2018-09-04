@@ -8,7 +8,7 @@ trait MongoDBConvert[T] {
 
 //    def queryObject(res: request)(implicit dbTrait: DBTrait): Option[T]
 //    def queryMultipleObject[T: ClassTag](res: request, sort : String = "date"): List[T]
-//    def insertObject[T: ClassTag](model: T): DBObject
+//    def insertObject[T: ClassTag](model222: T): DBObject
 //    def updateObject[T: ClassTag](res: request): Int
 //    def deleteObject(res: request): Int
 //    def queryCount: Long = ???

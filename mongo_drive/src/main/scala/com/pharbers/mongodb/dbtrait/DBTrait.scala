@@ -4,9 +4,7 @@ import scala.reflect.ClassTag
 import com.mongodb.casbah.Imports._
 import com.pharbers.mongodb.dbconnect.ConnectionInstance
 
-trait DBTrait {
-    type R
-
+trait DBTrait[R] {
     implicit val di: ConnectionInstance
 
     def queryObject[T: ClassTag](res: R): Option[T]

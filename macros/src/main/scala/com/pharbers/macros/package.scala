@@ -15,9 +15,9 @@ package object macros {
         implicitly[JsonapiConvert[T]].toJsonapi(objLst)
 
 
-    def fromMongoDB[T: MongoDBConvert](mongo: DBObject): T =
-        implicitly[MongoDBConvert[T]].fromMongo(mongo)
-    def toMongoDB[T: MongoDBConvert](obj: T): DBObject =
-        implicitly[MongoDBConvert[T]].toMongo(obj)
+//    def fromMongoDB[T: MongoDBConvert](mongo: DBObject): T =
+//        implicitly[MongoDBConvert[T]].fromMongo(mongo)
+//    def toMongoDB[T: MongoDBConvert](obj: T): DBObject =
+//        implicitly[MongoDBConvert[T]].toMongo(obj)
 
 }

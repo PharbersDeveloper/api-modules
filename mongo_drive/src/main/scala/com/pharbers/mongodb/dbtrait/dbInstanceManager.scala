@@ -14,7 +14,7 @@ trait dbInstanceManager extends PharbersInjectModule {
 
 	override val id: String = "mongodb-connect-nodes"
 	override val configPath: String = "pharbers_config/db_manager.xml"
-	override val md = "connect-config-path" :: Nil //"server_host" :: "server_port" :: "connect_name" :: "connect_pwd" :: "conn_name" :: Nil
+	override val md = "connect-config-path" :: Nil
 
 	import com.pharbers.moduleConfig.ModuleConfig.fr
 	implicit val f : (ConfigDefines, Node) => ConfigImpl = { (c, n) =>

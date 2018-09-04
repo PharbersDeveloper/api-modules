@@ -1,15 +1,23 @@
 package com.pharbers.mongodb.dbtrait
 
-import com.mongodb.casbah.Imports._
-import com.pharbers.mongodb.model.request
-
 import scala.reflect.ClassTag
+import com.mongodb.casbah.Imports._
+import com.pharbers.mongodb.dbconnect.ConnectionInstance
 
 trait DBTrait {
-	def queryObject[T: ClassTag](res: request): Option[T]
-	def queryMultipleObject[T: ClassTag](res: request, sort : String = "date"): List[T]
-	def insertObject[T: ClassTag](model: T): DBObject
-	def updateObject[T: ClassTag](res: request): Int
-	def deleteObject(res: request): Int
-//	def queryCount
+    type R
+
+    implicit val di: ConnectionInstance
+
+    def queryObject[T: ClassTag](res: R): Option[T]
+
+    def queryMultipleObject[T: ClassTag](res: R, sort: String = "date"): List[T]
+
+    def insertObject[T: ClassTag](model: T): DBObject
+
+    def updateObject[T: ClassTag](res: R): Int
+
+    def deleteObject(res: R): Int
+
+    def queryCount: Long
 }

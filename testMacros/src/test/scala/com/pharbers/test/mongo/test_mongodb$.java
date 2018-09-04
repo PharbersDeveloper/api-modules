@@ -1,15 +1,7 @@
-
-import com.pharbers.jsonapi.json.circe.CirceJsonapiSupport
-import com.pharbers.jsonapi.model._
-import com.pharbers.macros._
-import com.pharbers.util.log.phLogTrait
-import com.pharbers.macros.convert.jsonapi.JsonapiMacro._
-import com.pharbers.mongodb.dbtrait.dbInstanceManager
-import com.pharbers.mongodb.model.request
-import com.pharbers.test.model._
+package com.pharbers.test.mongo;
 
 object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport with phLogTrait {
-	
+
 	def findOne = {
 		val jsonData =
 			"""
@@ -49,18 +41,18 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 			  |	}]
 			  |}
 			""".stripMargin
-		
+
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-		
+
 		val requests = formJsonapi[request](jsonapi)
 		//		phLog(requests.cond2QueryObj())
-		
+
 		val result = queryDBInstance("test").get.queryObject[Person](requests)
 		phLog(result)
-		
+
 	}
-	
+
 	def findPerson = {
 		val jsonData =
 			"""
@@ -90,13 +82,13 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 			  |	}]
 			  |}
 			""".stripMargin
-		
+
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-		
+
 		val requests = formJsonapi[request](jsonapi)
 		//				phLog(requests.cond2QueryObj())
-		
+
 		val result = queryDBInstance("test").get.queryObject[Person](requests)
 		phLog(result)
 		//		result.tips.foreach(phLog(_))
@@ -104,7 +96,7 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 		//			phLog(x)
 		//		}
 	}
-	
+
 	def queryMultipleObject = {
 		val jsonData =
 			"""
@@ -147,17 +139,17 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 			  |	}]
 			  |}
 			""".stripMargin
-		
+
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-		
+
 		val requests = formJsonapi[request](jsonapi)
-		
+
 		val result = queryDBInstance("test").get.queryMultipleObject[Person](requests)
 		phLog(result)
-		
+
 	}
-	
+
 	def insertObject = {
 		val jsonData =
 			"""
@@ -189,12 +181,12 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 			  |	}]
 			  |}
 			""".stripMargin
-		
+
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-		
+
 		val consumers = formJsonapi[Consumers](jsonapi)
-		
+
 		val dbinstance = queryDBInstance("test").get
 		val result = dbinstance.insertObject[Consumers](consumers)
 		phLog(consumers.orders)
@@ -203,7 +195,7 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 		}
 		phLog(result)
 	}
-	
+
 	def updataObject = {
 		val jsonData =
 			"""
@@ -246,16 +238,16 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 			  |	}]
 			  |}
 			""".stripMargin
-		
+
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-		
+
 		val requests = formJsonapi[request](jsonapi)
-		
+
 		val result = queryDBInstance("test").get.updateObject[test](requests)
 		phLog(result)
 	}
-	
+
 	def deleteObject = {
 		val jsonData =
 			"""
@@ -285,15 +277,15 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 			  |	}]
 			  |}
 			""".stripMargin
-		
+
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-		
+
 		val requests = formJsonapi[request](jsonapi)
 		val result = queryDBInstance("test").get.deleteObject(requests)
 		phLog(result)
 	}
-	
+
 	def updataObject2 = {
 		val jsonData =
 			"""
@@ -345,17 +337,17 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 			  |    ]
 			  |}
 			""".stripMargin
-		
+
 		val json_data = parseJson(jsonData)
 		val jsonapi = decodeJson[RootObject](json_data)
-		
+
 		val requests = formJsonapi[request](jsonapi)
-		
+
 		val result = queryDBInstance("test").get.updateObject[test](requests)
 		phLog(result)
 	}
-	
-	
+
+
 	//	findOne
 	//	findPerson
 	//	queryMultipleObject
@@ -363,5 +355,5 @@ object test_mongodb extends App with dbInstanceManager with CirceJsonapiSupport 
 	//	updataObject
 	//	updataObject2
 	//	deleteObject
-	
+
 }

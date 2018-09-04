@@ -11,12 +11,11 @@ import scala.language.postfixOps
 import play.api.libs.json.JsValue
 
 import scala.concurrent.duration._
-import com.pharbers.pattern.entity.commonResult
-import com.pharbers.pattern.manager.SequenceSteps
 import akka.actor.{ActorSystem, Props}
 import com.pharbers.pattern.steps.excute
 import play.api.libs.Files.TemporaryFile
-
+import com.pharbers.pattern.entity.commonResult
+import com.pharbers.pattern.manager.SequenceSteps
 
 object PlayEntry {
     def apply()(implicit akkasys : ActorSystem, cc : ControllerComponents) = new PlayEntry()

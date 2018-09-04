@@ -1,8 +1,4 @@
-package com.pharbers.test.model
-
-import com.pharbers.macros.api.commonEntity
-import com.pharbers.macros.common.connecting.ToStringMacro
-
+package com.pharbers.test.mongo;
 
 @ToStringMacro
 case class Person() extends commonEntity {

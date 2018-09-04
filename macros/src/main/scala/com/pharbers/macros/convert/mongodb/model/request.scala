@@ -30,7 +30,7 @@ case class request() extends commonEntity {
 		}
 		o
 	}
-	
+
 	def cond2fmQueryObj(): fm_cond = fm_conditions.get
 
 }
